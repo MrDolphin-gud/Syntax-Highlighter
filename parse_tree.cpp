@@ -287,6 +287,9 @@ private:
                 block->children.push_back(stmt);
             }
         }
+        if (currentToken == "}") {
+            currentToken = getNextToken();
+        }
         return block;
     }
 
@@ -470,7 +473,7 @@ public:
                 }
             }
             // Diğer ifadeler
-            else if (!isKeyword(currentToken) && currentToken != ";") {
+            else if (currentToken != ";") {  
                 auto stmt = parseStatement();
                 if (stmt->type != EXPRESSION || !stmt->children.empty()) {
                     root->children.push_back(stmt);
@@ -516,10 +519,83 @@ private:
     // Düğümü ağaca ekler
     void addNodeToTree(Fl_Tree_Item* parent, const std::shared_ptr<ParseNode>& node) {
         std::string label = getNodeTypeName(node->type);
-        if (!node->value.empty()) {
-            label += ": " + node->value;
+        switch (node->type) {
+            case IF_STATEMENT:
+                label = "If İfadesi";
+                if (!node->children.empty()) {
+
+                    auto conditionNode = std::make_shared<ParseNode>(EXPRESSION, "Koşul");
+                    conditionNode->children.push_back(node->children[0]);
+                    node->children[0] = conditionNode;
+
+                    if (node->children.size() > 1) {
+                        auto thenNode = std::make_shared<ParseNode>(BLOCK_STATEMENT, "Then Bloğu");
+                        thenNode->children.push_back(node->children[1]);
+                        node->children[1] = thenNode;
+                    }
+
+                    if (node->children.size() > 2) {
+                        auto elseNode = std::make_shared<ParseNode>(BLOCK_STATEMENT, "Else Bloğu");
+                        elseNode->children.push_back(node->children[2]);
+                        node->children[2] = elseNode;
+                    }
+                }
+                break;
+                
+            case WHILE_STATEMENT:
+                label = "While Döngüsü";
+                if (!node->children.empty()) {
+
+                    auto conditionNode = std::make_shared<ParseNode>(EXPRESSION, "Koşul");
+                    conditionNode->children.push_back(node->children[0]);
+                    node->children[0] = conditionNode;
+
+                    if (node->children.size() > 1) {
+                        auto bodyNode = std::make_shared<ParseNode>(BLOCK_STATEMENT, "Döngü Gövdesi");
+                        bodyNode->children.push_back(node->children[1]);
+                        node->children[1] = bodyNode;
+                    }
+                }
+                break;
+                
+            case FOR_STATEMENT:
+                label = "For Döngüsü";
+                if (!node->children.empty()) {
+
+                    auto initNode = std::make_shared<ParseNode>(EXPRESSION, "Başlangıç");
+                    initNode->children.push_back(node->children[0]);
+                    node->children[0] = initNode;
+
+                    if (node->children.size() > 1) {
+                        auto conditionNode = std::make_shared<ParseNode>(EXPRESSION, "Koşul");
+                        conditionNode->children.push_back(node->children[1]);
+                        node->children[1] = conditionNode;
+                    }
+
+                    if (node->children.size() > 2) {
+                        auto incrementNode = std::make_shared<ParseNode>(EXPRESSION, "Artırma");
+                        incrementNode->children.push_back(node->children[2]);
+                        node->children[2] = incrementNode;
+                    }
+
+                    if (node->children.size() > 3) {
+                        auto bodyNode = std::make_shared<ParseNode>(BLOCK_STATEMENT, "Döngü Gövdesi");
+                        bodyNode->children.push_back(node->children[3]);
+                        node->children[3] = bodyNode;
+                    }
+                }
+                break;
+                
+            default:
+                if (!node->value.empty()) {
+                    label += ": " + node->value;
+                }
+                break;
         }
+        
         Fl_Tree_Item* item = tree->add(parent, label.c_str());
+        item->open(); 
+        
         for (const auto& child : node->children) {
             addNodeToTree(item, child);
         }
