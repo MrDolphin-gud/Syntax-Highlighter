@@ -91,7 +91,7 @@ Proje aşağıdaki bağımlılıkları kullanır:
 
 ### Token Tipleri
 
-Program, kaynak kodundaki farklı öğeleri aşağıdaki token tipleriyle sınıflandırır:
+Token tipleri, kaynak kodundaki farklı öğeleri sınıflandırmak için kullanılan temel yapı taşlarıdır. Her token tipi, kodun belirli bir öğesini temsil eder ve ona özel bir renk/stil atanır. Bu sınıflandırma sistemi, kodun görsel olarak daha anlaşılır olmasını sağlar. Örneğin, anahtar kelimeler kırmızı renkte, sayılar mavi renkte gösterilir. Bu sayede programcı, kodun farklı bileşenlerini hızlıca ayırt edebilir. Aşağıdaki enum yapısı, tüm olası token tiplerini ve bunların kullanım amaçlarını tanımlar:
 
 ```cpp
 enum TokenTipi {
@@ -108,7 +108,7 @@ enum TokenTipi {
 
 ### Token Yapısı
 
-Her token, aşağıdaki bilgileri içerir:
+Token yapısı, her bir token'ın metin içindeki konumunu ve özelliklerini tutan temel veri yapısıdır. Bu yapı, token'ın başlangıç ve bitiş pozisyonlarını, tipini ve değerini içerir. Bu bilgiler, syntax vurgulama ve lexical analiz için kritik öneme sahiptir. Örneğin, bir değişken tanımlaması için token yapısı şu bilgileri içerir: başlangıç pozisyonu (değişken adının başladığı yer), bitiş pozisyonu (değişken adının bittiği yer), tip (TANIMLAYICI) ve değer (değişken adı). Bu yapı, aşağıdaki gibi tanımlanır:
 
 ```cpp
 struct Token {
@@ -121,7 +121,15 @@ struct Token {
 
 ### SyntaxVurgulayici Sınıfı
 
-`SyntaxVurgulayici` sınıfı, kaynak kodun token'lara ayrılması ve renklendirilmesi işlemlerini yönetir:
+SyntaxVurgulayici sınıfı, kaynak kodun token'lara ayrılması ve renklendirilmesi işlemlerini yöneten ana sınıftır. Bu sınıf, metin buffer'ını, stil buffer'ını ve token listesini tutar. Ayrıca, farklı token tiplerini bulmak için regex desenlerini kullanır. Sınıfın temel görevleri şunlardır:
+
+1. Metin içeriğini sürekli izleme ve değişiklikleri algılama
+2. Değişen metni token'lara ayırma
+3. Her token'a uygun renk ve stili atama
+4. Token listesini güncel tutma
+5. Görsel geri bildirim sağlama
+
+Sınıf, aşağıdaki önemli bileşenleri içerir:
 
 ```cpp
 class SyntaxVurgulayici {
@@ -160,7 +168,15 @@ public:
 
 ### Regex Desenleri
 
-Program, farklı token tiplerini bulmak için aşağıdaki regex desenlerini kullanır:
+Regex desenleri, farklı token tiplerini metin içinde bulmak için kullanılan güçlü bir araçtır. Her desen, belirli bir token tipini tanımlar ve eşleşen metinleri bulur. Bu desenler, C++ kodundaki farklı öğeleri tanımlamak için özel olarak tasarlanmıştır. Örneğin:
+
+- Anahtar kelimeler için desen, C++'ın tüm anahtar kelimelerini içerir
+- Tanımlayıcılar için desen, değişken ve fonksiyon isimlerinin kurallarına uyar
+- Sayılar için desen, hem tam sayıları hem de ondalıklı sayıları tanır
+- Operatörler için desen, tüm C++ operatörlerini kapsar
+- String'ler için desen, kaçış karakterlerini de dikkate alır
+
+Bu desenler şu şekilde tanımlanır:
 
 ```cpp
 // Anahtar kelimeler için desen
@@ -187,9 +203,23 @@ std::string yorumDeseni = "(//[^\\n]*)|(/\\*[\\s\\S]*?\\*/)";
 
 ### Token İşleme
 
-Token'ların işlenmesi şu adımlarla gerçekleşir:
+Token işleme, metni token'lara ayırma ve bu token'ları renklendirme sürecini içeren karmaşık bir işlemdir. Bu süreç iki ana adımdan oluşur:
 
-1. **Token Bulma**: Regex desenleri kullanılarak metin içindeki token'lar bulunur:
+1. Token Bulma: Metin içindeki token'lar regex desenleri kullanılarak bulunur. Bu adım şunları içerir:
+   - Metni karakter karakter tarama
+   - Regex desenlerini uygulama
+   - Eşleşen token'ları belirleme
+   - Token'ların başlangıç ve bitiş pozisyonlarını kaydetme
+   - Token'ları tipine göre sınıflandırma
+
+2. Renklendirme: Bulunan token'lar uygun renklerle vurgulanır. Bu adım şunları içerir:
+   - Her token tipi için renk ve stil belirleme
+   - Metin buffer'ını stil buffer'ı ile eşleştirme
+   - Görsel geri bildirimi güncelleme
+   - Performans optimizasyonları
+
+İşte bu sürecin nasıl gerçekleştiğini gösteren detaylı kod:
+
 ```cpp
 void tokenize() {
     tokenlar.clear();
@@ -224,29 +254,29 @@ void tokenize() {
 }
 ```
 
-2. **Renklendirme**: Bulunan token'lar renklendirilir:
-```cpp
-void vurgula() {
-    if (metinBuffer->length() == 0) return;
-
-    // Önce tüm metni tanımlayıcı rengiyle doldur
-    std::string stil(metinBuffer->length(), 'A' + TANIMLAYICI);
-    stilBuffer->text(stil.c_str());
-
-    // Her token için uygun rengi uygula
-    for (const Token &token : tokenlar) {
-        if (token.tip == BOSLUK) continue;
-        char stilKarakteri = 'A' + token.tip;
-        for (int i = token.baslangic; i < token.bitis; ++i) {
-            stilBuffer->replace(i, i + 1, &stilKarakteri, 1);
-        }
-    }
-}
-```
-
 ### Renk ve Stil Yönetimi
 
-Program, farklı token tipleri için özel renk ve stil tanımlamaları kullanır:
+Renk ve stil yönetimi, farklı token tipleri için görsel özellikleri tanımlayan ve uygulayan sistemdir. Her token tipi için özel bir renk ve font stili belirlenir. Bu tanımlamalar, metin düzenleyicide syntax vurgulama için kullanılır. Sistem şu özellikleri içerir:
+
+1. Renk Tanımlamaları:
+   - Anahtar kelimeler: Kırmızı (FL_RED)
+   - Tanımlayıcılar: Siyah (FL_BLACK)
+   - Sayılar: Mavi (FL_BLUE)
+   - Operatörler: Koyu Yeşil (FL_DARK_GREEN)
+   - String'ler: Mor (FL_MAGENTA)
+   - Karakterler: Altın Sarısı (FL_DARKGOLD)
+   - Yorumlar: Gri (FL_GRAY)
+   - Boşluklar: Beyaz (FL_WHITE)
+
+2. Font Stilleri:
+   - Anahtar kelimeler: Kalın (FL_COURIER_BOLD)
+   - Yorumlar: İtalik (FL_COURIER_ITALIC)
+   - Diğerleri: Normal (FL_COURIER)
+
+3. Font Boyutları:
+   - Tüm token'lar için 14 punto
+
+Bu tanımlamalar şu şekilde yapılır:
 
 ```cpp
 // Stil tablosu tanımlaması
@@ -272,7 +302,18 @@ duzenleyici->highlight_data(vurgulayici.getStilBuffer(),
 
 ### Düğüm Tipleri
 
-Sözdizimi ağacı, kodun yapısal öğelerini temsil eden düğümlerden oluşur:
+Düğüm tipleri, sözdizimi ağacındaki her bir düğümün ne tür bir kod yapısını temsil ettiğini belirten kapsamlı bir sınıflandırma sistemidir. Bu enum yapısı, programın tüm olası yapısal öğelerini tanımlar ve her bir düğüm tipinin belirli bir kod yapısını temsil etmesini sağlar. Örneğin:
+
+- PROGRAM: Tüm kaynak kodun kök düğümü
+- FUNCTION_DEF: Fonksiyon tanımlamaları
+- VARIABLE_DECL: Değişken tanımlamaları
+- PARAM_LIST: Fonksiyon parametreleri
+- STATEMENT: Genel ifadeler
+- IF_STATEMENT: Koşul ifadeleri
+- WHILE_STATEMENT: Döngü ifadeleri
+- EXPRESSION: Matematiksel ve mantıksal ifadeler
+
+Bu yapı şu şekilde tanımlanır:
 
 ```cpp
 enum NodeType {
@@ -299,7 +340,26 @@ enum NodeType {
 
 ### Parser Sınıfı
 
-`Parser` sınıfı, kaynak kodunu okuyup sözdizimi ağacını oluşturur:
+Parser sınıfı, kaynak kodunu okuyup sözdizimi ağacını oluşturan karmaşık bir sistemdir. Bu sınıf, token'ları okur, yorumları atlar ve kodun yapısal analizini yapar. Ayrıca, farklı ifade tiplerini ayrıştırmak için özel metodlar içerir. Sınıfın temel özellikleri:
+
+1. Token Yönetimi:
+   - Token'ları sırayla okuma
+   - Yorum satırlarını atlama
+   - Boşlukları işleme
+   - Özel karakterleri tanıma
+
+2. Ayrıştırma Stratejisi:
+   - Yukarıdan aşağıya ayrıştırma
+   - Öncelik bazlı ifade ayrıştırma
+   - Bağlam duyarlı analiz
+   - Hata tespiti ve raporlama
+
+3. Ağaç Oluşturma:
+   - Düğümleri hiyerarşik olarak oluşturma
+   - İlişkileri belirleme
+   - Ağaç yapısını optimize etme
+
+Bu sınıf şu şekilde tanımlanır:
 
 ```cpp
 class Parser {
@@ -363,7 +423,25 @@ public:
 
 ### Ağaç Yapısı
 
-Her düğüm, kodun bir parçasını ve onun alt öğelerini temsil eder:
+Ağaç yapısı, kodun hiyerarşik temsilini sağlayan temel veri yapısıdır. Her düğüm, kodun bir parçasını ve onun alt öğelerini temsil eder. Bu yapı, kodun yapısal analizini görselleştirmek için kullanılır. Ağaç yapısının özellikleri:
+
+1. Düğüm Özellikleri:
+   - Tip bilgisi (NodeType)
+   - Değer bilgisi (string)
+   - Alt düğümler listesi
+   - Ebeveyn düğüm referansı
+
+2. Hiyerarşik İlişkiler:
+   - Program -> Fonksiyonlar -> İfadeler
+   - İfadeler -> Alt ifadeler
+   - Bloklar -> İçerikler
+
+3. Veri Yönetimi:
+   - Akıllı işaretçiler (shared_ptr)
+   - Otomatik bellek yönetimi
+   - Verimli veri yapısı
+
+Bu yapı şu şekilde tanımlanır:
 
 ```cpp
 struct ParseNode {
@@ -379,15 +457,34 @@ struct ParseNode {
 
 ### Ayrıştırma Stratejisi
 
-Parser, aşağıdaki stratejiyi kullanarak kodu ayrıştırır:
+Ayrıştırma stratejisi, kodun nasıl ayrıştırılacağını ve sözdizimi ağacının nasıl oluşturulacağını tanımlayan kapsamlı bir sistemdir. Bu süreç, token okuma, yorum atlama, ifade ayrıştırma, blok ayrıştırma ve fonksiyon ayrıştırma adımlarını içerir. Stratejinin ana bileşenleri:
 
-1. **Token Okuma**: Metni token'lara ayırır
-2. **Yorum Atlama**: Yorum satırlarını atlar
-3. **İfade Ayrıştırma**: İfadeleri öncelik sırasına göre ayrıştırır
-4. **Blok Ayrıştırma**: Kod bloklarını ayrıştırır
-5. **Fonksiyon Ayrıştırma**: Fonksiyon tanımlarını ayrıştırır
+1. Token İşleme:
+   - Token'ları sırayla okuma
+   - Geçerli token'ı takip etme
+   - Token tipini belirleme
+   - Token değerini işleme
 
-Örnek ayrıştırma kodu:
+2. İfade Ayrıştırma:
+   - Öncelik bazlı ayrıştırma
+   - Operatör önceliklerini dikkate alma
+   - Parantez içi ifadeleri işleme
+   - Karmaşık ifadeleri basitleştirme
+
+3. Blok Ayrıştırma:
+   - Süslü parantez içi kodları işleme
+   - İç içe blokları yönetme
+   - Kapsam kurallarını uygulama
+   - Değişken erişimini kontrol etme
+
+4. Fonksiyon Ayrıştırma:
+   - Fonksiyon başlığını işleme
+   - Parametreleri ayrıştırma
+   - Dönüş tipini belirleme
+   - Fonksiyon gövdesini analiz etme
+
+Bu strateji şu şekilde uygulanır:
+
 ```cpp
 std::shared_ptr<ParseNode> parseIfStatement() {
     auto node = std::make_shared<ParseNode>(IF_STATEMENT);
@@ -429,7 +526,29 @@ std::shared_ptr<ParseNode> parseIfStatement() {
 
 ### Hata Yönetimi
 
-Parser, ayrıştırma sırasında karşılaşılan hataları yönetir:
+Hata yönetimi, ayrıştırma sırasında karşılaşılan hataları yakalayan ve işleyen gelişmiş bir sistemdir. Bu sistem, beklenmeyen token'lar veya geçersiz kod yapıları için özel hata mesajları üretir. Hata yönetiminin özellikleri:
+
+1. Hata Türleri:
+   - Sözdizimi hataları
+   - Eksik parantezler
+   - Geçersiz ifadeler
+   - Tip uyumsuzlukları
+   - Tanımlanmamış değişkenler
+
+2. Hata İşleme:
+   - Hata tespiti
+   - Hata mesajı oluşturma
+   - Hata konumunu belirleme
+   - Kullanıcıya bildirim
+   - Kurtarma mekanizmaları
+
+3. Hata Raporlama:
+   - Detaylı hata açıklamaları
+   - Satır numarası belirtme
+   - Beklenen ve bulunan değerleri gösterme
+   - Öneriler sunma
+
+Bu sistem şu şekilde uygulanır:
 
 ```cpp
 class ParserError : public std::runtime_error {
@@ -451,7 +570,28 @@ void checkToken(const std::string& expected) {
 
 ### Ana Pencere
 
-Ana pencere, kaynak kod düzenleyici ve kontrol butonlarını içerir:
+Ana pencere, uygulamanın temel arayüzünü oluşturan karmaşık bir bileşendir. Bu sınıf, metin düzenleyici, kontrol butonları ve diğer UI bileşenlerini içerir. Ayrıca, kullanıcı etkileşimlerini yönetir. Pencere özellikleri:
+
+1. Bileşenler:
+   - Metin düzenleyici (Fl_Text_Editor)
+   - Lexical analiz butonu
+   - Sözdizimi ağacı butonu
+   - Durum çubuğu
+   - Menü çubuğu
+
+2. Düzen:
+   - Esnek yerleşim
+   - Yeniden boyutlandırma desteği
+   - Responsive tasarım
+   - Kullanıcı dostu arayüz
+
+3. İşlevsellik:
+   - Gerçek zamanlı syntax vurgulama
+   - Dosya işlemleri
+   - Analiz araçları
+   - Ayarlar yönetimi
+
+Bu pencere şu şekilde tanımlanır:
 
 ```cpp
 class MainWindow : public Fl_Window {
@@ -497,7 +637,27 @@ public:
 
 ### Lexical Analiz Penceresi
 
-Lexical analiz penceresi, token'ları ağaç yapısında gösterir:
+Lexical analiz penceresi, token'ları ağaç yapısında gösteren özel bir görüntüleme bileşenidir. Bu pencere, kaynak kodun lexical analizini görselleştirir ve her token'ın tipini ve değerini gösterir. Pencere özellikleri:
+
+1. Görüntüleme:
+   - Token ağacı
+   - Token detayları
+   - Renk kodlaması
+   - Genişletilebilir düğümler
+
+2. İnteraktif Özellikler:
+   - Düğüm seçimi
+   - Detay görüntüleme
+   - Arama ve filtreleme
+   - Yakınlaştırma
+
+3. Güncelleme:
+   - Gerçek zamanlı güncelleme
+   - Değişiklik takibi
+   - Performans optimizasyonu
+   - Bellek yönetimi
+
+Bu pencere şu şekilde tanımlanır:
 
 ```cpp
 class LexicalAnalizPencere : public Fl_Window {
@@ -539,7 +699,27 @@ public:
 
 ### Sözdizimi Ağacı Penceresi
 
-Sözdizimi ağacı penceresi, kodun yapısal analizini gösterir:
+Sözdizimi ağacı penceresi, kodun yapısal analizini gösteren gelişmiş bir görselleştirme aracıdır. Bu pencere, kodun hiyerarşik yapısını ağaç görünümünde sunar ve her düğümün tipini ve değerini gösterir. Pencere özellikleri:
+
+1. Ağaç Görünümü:
+   - Hiyerarşik yapı
+   - Düğüm detayları
+   - İlişki gösterimi
+   - Görsel stil
+
+2. İnteraktif Özellikler:
+   - Düğüm genişletme/daraltma
+   - Düğüm seçimi
+   - Detay görüntüleme
+   - Arama ve filtreleme
+
+3. Güncelleme Mekanizması:
+   - Gerçek zamanlı güncelleme
+   - Değişiklik takibi
+   - Performans optimizasyonu
+   - Bellek yönetimi
+
+Bu pencere şu şekilde tanımlanır:
 
 ```cpp
 class ParseTreeWindow : public Fl_Window {
@@ -591,22 +771,34 @@ public:
 
 ### Basit Örnekler
 
-1. **Değişken Tanımlama**:
+Aşağıdaki örnekler, programın temel özelliklerini göstermek için kullanılabilir. Her örnek, farklı bir kod yapısını ve onun nasıl analiz edildiğini gösterir. Bu örnekler, programın temel işlevselliğini anlamak için idealdir:
+
+1. Değişken Tanımlamaları:
+   - Farklı veri tipleri
+   - İlk değer atamaları
+   - Tip dönüşümleri
+
+2. Fonksiyon Tanımlamaları:
+   - Parametre listeleri
+   - Dönüş tipleri
+   - Fonksiyon gövdeleri
+
+3. Kontrol Yapıları:
+   - If-else ifadeleri
+   - Döngüler
+   - Switch-case yapıları
+
+Örnek kodlar:
+
 ```cpp
 int sayi = 42;
 float pi = 3.14159;
 string mesaj = "Merhaba";
-```
 
-2. **Fonksiyon Tanımlama**:
-```cpp
 int topla(int a, int b) {
     return a + b;
 }
-```
 
-3. **Koşul İfadesi**:
-```cpp
 if (x > 0) {
     return "Pozitif";
 } else {
@@ -616,7 +808,25 @@ if (x > 0) {
 
 ### Karmaşık Örnekler
 
-1. **İç İçe Fonksiyonlar**:
+Karmaşık örnekler, programın daha gelişmiş özelliklerini gösterir. Bu örnekler, iç içe fonksiyonlar, karmaşık kontrol yapıları ve diğer ileri düzey kod yapılarını içerir. Bu örnekler, programın güçlü yönlerini ve karmaşık kod yapılarını nasıl analiz edebildiğini gösterir:
+
+1. İç İçe Yapılar:
+   - Sınıf tanımlamaları
+   - İç içe fonksiyonlar
+   - Karmaşık ifadeler
+
+2. Gelişmiş Kontrol Yapıları:
+   - Çoklu koşullar
+   - İç içe döngüler
+   - Karmaşık mantık
+
+3. Özel Durumlar:
+   - Şablonlar
+   - Kalıtım
+   - Çoklu kalıtım
+
+Örnek kodlar:
+
 ```cpp
 class Matematik {
     float hesapla(int x, float y) {
@@ -630,10 +840,7 @@ class Matematik {
         return 0.0f;
     }
 };
-```
 
-2. **Karmaşık Kontrol Yapıları**:
-```cpp
 void islemYap(int* dizi, int boyut) {
     for (int i = 0; i < boyut; i++) {
         if (dizi[i] > 0) {
