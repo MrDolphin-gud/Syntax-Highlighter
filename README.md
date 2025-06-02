@@ -1,6 +1,6 @@
 # C++ Kod Analiz Aracı
 
-Bu proje, C++ kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun sözdizimi analizini yaparak, lexical analiz ve parse tree (sözdizimi ağacı) görselleştirmesi sunar.
+Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun sözdizimi analizini yaparak, lexical analiz ve parse tree (sözdizimi ağacı) görselleştirmesi sunar.
 
 ## Özellikler
 
@@ -101,6 +101,9 @@ string hesapla(int x, float y) {
     return "Bitti";
 }
 ```
+## Proje Videosu
+
+-https://youtu.be/sRRPJtxva7s?si=cSyMbg4ywYhfrutt
 
 ## Proje Yapısı
 
