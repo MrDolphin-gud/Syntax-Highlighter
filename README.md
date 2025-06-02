@@ -66,7 +66,7 @@ Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun s
    ```
 
 2. Ana pencere üzerinde:
-   - Sol üst köşede kod düzenleyici bulunur
+   - Kod düzenleyici bulunur
    - Alt kısımda "Lexical Analiz" ve "Sözdizimi Ağacı" butonları vardır
 
 3. Kod yazma/düzenleme:
