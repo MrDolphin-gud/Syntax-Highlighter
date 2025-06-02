@@ -1,11 +1,11 @@
-# C++ Kod Analiz Aracı
+# C Kod Analiz Aracı
 
 Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun sözdizimi analizini yaparak, lexical analiz ve parse tree (sözdizimi ağacı) görselleştirmesi sunar.
 
 ## Özellikler
 
 ### 1. Syntax Vurgulama
-- C++ anahtar kelimeleri için renkli vurgulama
+- C anahtar kelimeleri için renkli vurgulama
 - Değişken ve fonksiyon isimleri için özel renklendirme
 - Sayısal değerler, operatörler ve metinler için farklı renkler
 - Yorum satırları için özel stil
@@ -39,7 +39,7 @@ Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun s
 
 ## Gereksinimler
 
-- C++ derleyici (C++11 veya üzeri)
+- C++ derleyici (C11 veya üzeri)
 - FLTK (Fast Light Toolkit) kütüphanesi
 - CMake (derleme için)
 
@@ -70,7 +70,7 @@ Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun s
    - Alt kısımda "Lexical Analiz" ve "Sözdizimi Ağacı" butonları vardır
 
 3. Kod yazma/düzenleme:
-   - Kod düzenleyicide C++ kodu yazın
+   - Kod düzenleyicide C kodu yazın
    - Syntax vurgulama otomatik olarak güncellenir
    - Yorum satırları gri renkte gösterilir
 
