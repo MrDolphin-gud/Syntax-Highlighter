@@ -26,7 +26,7 @@
 
 ## Genel Bakış
 
-Bu proje, C++ kaynak kodlarını analiz eden ve görselleştiren iki ana bileşenden oluşmaktadır:
+Bu proje, C kodlarını analiz eden ve görselleştiren iki ana bileşenden oluşmaktadır:
 
 1. **Syntax Vurgulayıcı**: Kaynak kodundaki farklı token'ları (anahtar kelimeler, tanımlayıcılar, sayılar vb.) renklendirerek görsel olarak ayırt edilmesini sağlar.
 2. **Sözdizimi Ağacı**: Kaynak kodun yapısal analizini yaparak, kodun hiyerarşik bir ağaç yapısında gösterilmesini sağlar.
@@ -95,7 +95,7 @@ Program, kaynak kodundaki farklı öğeleri aşağıdaki token tipleriyle sını
 
 ```cpp
 enum TokenTipi {
-    ANAHTAR_KELIME = 0,  // if, else, while gibi C++ anahtar kelimeleri
+    ANAHTAR_KELIME = 0,  // if, else, while gibi C anahtar kelimeleri
     TANIMLAYICI,         // Değişken ve fonksiyon isimleri
     SAYI,                // Sayısal değerler (tam sayı ve ondalıklı)
     OPERATOR,            // +, -, *, /, =, ==, != gibi operatörler
@@ -130,7 +130,7 @@ private:
     Fl_Text_Buffer *stilBuffer;            // Renk ve stil bilgilerini tutan buffer
     std::vector<Token> tokenlar;           // Bulunan tüm token'ların listesi
     std::map<TokenTipi, Fl_Color> renkHaritasi;  // Token tiplerine göre renk eşleştirmeleri
-    std::vector<std::string> anahtarKelimeler;   // C++ anahtar kelimeleri listesi
+    std::vector<std::string> anahtarKelimeler;   // C anahtar kelimeleri listesi
     std::regex anahtarKelimeRegex;        // Anahtar kelimeleri bulmak için
     std::regex tanimlayiciRegex;          // Tanımlayıcıları bulmak için
     std::regex sayiRegex;                 // Sayıları bulmak için
