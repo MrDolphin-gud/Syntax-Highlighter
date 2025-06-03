@@ -13,7 +13,6 @@ Bu proje, C kaynak kodunu analiz eden ve görselleştiren bir araçtır. Kodun s
 
 ### 2. Lexical Analiz
 - Token bazlı kod analizi
-- Her token tipi için detaylı bilgi
 - Ağaç yapısında token görselleştirme
 - Token tipleri:
   - Anahtar Kelimeler (if, else, while, vb.)
