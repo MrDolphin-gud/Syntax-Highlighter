@@ -38,10 +38,7 @@ Proje FLTK (Fast Light Toolkit) kütüphanesi kullanılarak geliştirilmiştir v
 - Gerçek zamanlı syntax vurgulama
 - Detaylı lexical analiz görüntüleme
 - Hiyerarşik sözdizimi ağacı gösterimi
-- Türkçe karakter desteği
 - Modern ve kullanıcı dostu arayüz
-- Yüksek performanslı kod analizi
-- Bellek içi işlem (dosya sistemi kullanılmaz)
 
 ## Kurulum ve Gereksinimler
 
@@ -91,7 +88,7 @@ Proje aşağıdaki bağımlılıkları kullanır:
 
 ### Token Tipleri
 
-Token tipleri, kaynak kodundaki farklı öğeleri sınıflandırmak için kullanılan temel yapı taşlarıdır. Her token tipi, kodun belirli bir öğesini temsil eder ve ona özel bir renk/stil atanır. Bu sınıflandırma sistemi, kodun görsel olarak daha anlaşılır olmasını sağlar. Örneğin, anahtar kelimeler kırmızı renkte, sayılar mavi renkte gösterilir. Bu sayede programcı, kodun farklı bileşenlerini hızlıca ayırt edebilir. Aşağıdaki enum yapısı, tüm olası token tiplerini ve bunların kullanım amaçlarını tanımlar:
+Token tipleri, kaynak kodundaki farklı öğeleri sınıflandırmak için kullanılan temel yapı taşlarıdır. Her token tipi, kodun belirli bir öğesini temsil eder ve ona özel bir renk/stil atanır. Bu sınıflandırma sistemi, kodun görsel olarak daha anlaşılır olmasını sağlar. Örneğin; anahtar kelimeler kırmızı renkte, sayılar mavi renkte gösterilir. Bu sayede programcı, kodun farklı bileşenlerini hızlıca ayırt edebilir. Aşağıdaki enum yapısı, tüm olası token tiplerini ve bunların kullanım amaçlarını tanımlar:
 
 ```cpp
 enum TokenTipi {
@@ -108,7 +105,7 @@ enum TokenTipi {
 
 ### Token Yapısı
 
-Token yapısı, her bir token'ın metin içindeki konumunu ve özelliklerini tutan temel veri yapısıdır. Bu yapı, token'ın başlangıç ve bitiş pozisyonlarını, tipini ve değerini içerir. Bu bilgiler, syntax vurgulama ve lexical analiz için kritik öneme sahiptir. Örneğin, bir değişken tanımlaması için token yapısı şu bilgileri içerir: başlangıç pozisyonu (değişken adının başladığı yer), bitiş pozisyonu (değişken adının bittiği yer), tip (TANIMLAYICI) ve değer (değişken adı). Bu yapı, aşağıdaki gibi tanımlanır:
+Token yapısı, her bir token'ın metin içindeki konumunu ve özelliklerini tutan temel veri yapısıdır. Bu yapı token'ın başlangıç ve bitiş pozisyonlarını, tipini ve değerini içerir. Bu bilgiler, syntax vurgulama ve lexical analiz için kritik öneme sahiptir. Örneğin, bir değişken tanımlaması için token yapısı şu bilgileri içerir: başlangıç pozisyonu (değişken adının başladığı yer), bitiş pozisyonu (değişken adının bittiği yer), tip (TANIMLAYICI) ve değer (değişken adı). Bu yapı, aşağıdaki gibi tanımlanır:
 
 ```cpp
 struct Token {
@@ -121,7 +118,7 @@ struct Token {
 
 ### SyntaxVurgulayici Sınıfı
 
-SyntaxVurgulayici sınıfı, kaynak kodun token'lara ayrılması ve renklendirilmesi işlemlerini yöneten ana sınıftır. Bu sınıf, metin buffer'ını, stil buffer'ını ve token listesini tutar. Ayrıca, farklı token tiplerini bulmak için regex desenlerini kullanır. Sınıfın temel görevleri şunlardır:
+SyntaxVurgulayici sınıfı, kaynak kodun token'lara ayrılması ve renklendirilmesi işlemlerini yöneten ana sınıftır. Bu sınıf metin buffer'ını, stil buffer'ını ve token listesini tutar. Ayrıca, farklı token tiplerini bulmak için regex desenlerini kullanır. Sınıfın temel görevleri şunlardır:
 
 1. Metin içeriğini sürekli izleme ve değişiklikleri algılama
 2. Değişen metni token'lara ayırma
@@ -168,12 +165,12 @@ public:
 
 ### Regex Desenleri
 
-Regex desenleri, farklı token tiplerini metin içinde bulmak için kullanılan güçlü bir araçtır. Her desen, belirli bir token tipini tanımlar ve eşleşen metinleri bulur. Bu desenler, C++ kodundaki farklı öğeleri tanımlamak için özel olarak tasarlanmıştır. Örneğin:
+Regex desenleri, farklı token tiplerini metin içinde bulmak için kullanılan güçlü bir araçtır. Her desen, belirli bir token tipini tanımlar ve eşleşen metinleri bulur. Bu desenler, C kodundaki farklı öğeleri tanımlamak için özel olarak tasarlanmıştır. Örneğin:
 
-- Anahtar kelimeler için desen, C++'ın tüm anahtar kelimelerini içerir
+- Anahtar kelimeler için desen, C'nin belirli bazı kelimelerini içerir
 - Tanımlayıcılar için desen, değişken ve fonksiyon isimlerinin kurallarına uyar
 - Sayılar için desen, hem tam sayıları hem de ondalıklı sayıları tanır
-- Operatörler için desen, tüm C++ operatörlerini kapsar
+- Operatörler için desen, C'nin operatörlerini kapsar
 - String'ler için desen, kaçış karakterlerini de dikkate alır
 
 Bu desenler şu şekilde tanımlanır:
@@ -302,7 +299,7 @@ duzenleyici->highlight_data(vurgulayici.getStilBuffer(),
 
 ### Düğüm Tipleri
 
-Düğüm tipleri, sözdizimi ağacındaki her bir düğümün ne tür bir kod yapısını temsil ettiğini belirten kapsamlı bir sınıflandırma sistemidir. Bu enum yapısı, programın tüm olası yapısal öğelerini tanımlar ve her bir düğüm tipinin belirli bir kod yapısını temsil etmesini sağlar. Örneğin:
+Düğüm tipleri, sözdizimi ağacındaki her bir düğümün ne tür bir kod yapısını temsil ettiğini belirten kapsamlı bir sınıflandırma sistemidir. Bu enum yapısı, programın olası yapısal öğelerini tanımlar ve her bir düğüm tipinin belirli bir kod yapısını temsil etmesini sağlar. Örneğin:
 
 - PROGRAM: Tüm kaynak kodun kök düğümü
 - FUNCTION_DEF: Fonksiyon tanımlamaları
@@ -340,7 +337,7 @@ enum NodeType {
 
 ### Parser Sınıfı
 
-Parser sınıfı, kaynak kodunu okuyup sözdizimi ağacını oluşturan karmaşık bir sistemdir. Bu sınıf, token'ları okur, yorumları atlar ve kodun yapısal analizini yapar. Ayrıca, farklı ifade tiplerini ayrıştırmak için özel metodlar içerir. Sınıfın temel özellikleri:
+Parser sınıfı, kaynak kodunu okuyup sözdizimi ağacını oluşturan karmaşık bir sistemdir. Bu sınıf token'ları okur, yorumları atlar ve kodun yapısal analizini yapar. Ayrıca, farklı ifade tiplerini ayrıştırmak için özel metodlar içerir. Sınıfın temel özellikleri:
 
 1. Token Yönetimi:
    - Token'ları sırayla okuma
@@ -349,9 +346,8 @@ Parser sınıfı, kaynak kodunu okuyup sözdizimi ağacını oluşturan karmaş�
    - Özel karakterleri tanıma
 
 2. Ayrıştırma Stratejisi:
-   - Yukarıdan aşağıya ayrıştırma
+   - Top-Down ayrıştırma
    - Öncelik bazlı ifade ayrıştırma
-   - Bağlam duyarlı analiz
    - Hata tespiti ve raporlama
 
 3. Ağaç Oluşturma:
@@ -457,7 +453,7 @@ struct ParseNode {
 
 ### Ayrıştırma Stratejisi
 
-Ayrıştırma stratejisi, kodun nasıl ayrıştırılacağını ve sözdizimi ağacının nasıl oluşturulacağını tanımlayan kapsamlı bir sistemdir. Bu süreç, token okuma, yorum atlama, ifade ayrıştırma, blok ayrıştırma ve fonksiyon ayrıştırma adımlarını içerir. Stratejinin ana bileşenleri:
+Ayrıştırma stratejisi, kodun nasıl ayrıştırılacağını ve sözdizimi ağacının nasıl oluşturulacağını tanımlayan kapsamlı bir sistemdir. Bu süreç token okuma, yorum atlama, ifade ayrıştırma, blok ayrıştırma ve fonksiyon ayrıştırma adımlarını içerir. Stratejinin ana bileşenleri:
 
 1. Token İşleme:
    - Token'ları sırayla okuma
@@ -526,7 +522,7 @@ std::shared_ptr<ParseNode> parseIfStatement() {
 
 ### Hata Yönetimi
 
-Hata yönetimi, ayrıştırma sırasında karşılaşılan hataları yakalayan ve işleyen gelişmiş bir sistemdir. Bu sistem, beklenmeyen token'lar veya geçersiz kod yapıları için özel hata mesajları üretir. Hata yönetiminin özellikleri:
+Hata yönetimi, ayrıştırma sırasında karşılaşılan hataları yakalayan ve işleyen bir sistemdir. Bu sistem, beklenmeyen token'lar veya geçersiz kod yapıları için özel hata mesajları üretir. Hata yönetiminin özellikleri:
 
 1. Hata Türleri:
    - Sözdizimi hataları
@@ -570,7 +566,7 @@ void checkToken(const std::string& expected) {
 
 ### Ana Pencere
 
-Ana pencere, uygulamanın temel arayüzünü oluşturan karmaşık bir bileşendir. Bu sınıf, metin düzenleyici, kontrol butonları ve diğer UI bileşenlerini içerir. Ayrıca, kullanıcı etkileşimlerini yönetir. Pencere özellikleri:
+Ana pencere, uygulamanın temel arayüzünü oluşturan bileşendir. Bu sınıf metin düzenleyici, kontrol butonları ve diğer UI bileşenlerini içerir. Ayrıca, kullanıcı etkileşimlerini yönetir. Pencere özellikleri:
 
 1. Bileşenler:
    - Metin düzenleyici (Fl_Text_Editor)
@@ -649,7 +645,6 @@ Lexical analiz penceresi, token'ları ağaç yapısında gösteren özel bir gö
    - Düğüm seçimi
    - Detay görüntüleme
    - Arama ve filtreleme
-   - Yakınlaştırma
 
 3. Güncelleme:
    - Gerçek zamanlı güncelleme
@@ -808,7 +803,7 @@ if (x > 0) {
 
 ### Karmaşık Örnekler
 
-Karmaşık örnekler, programın daha gelişmiş özelliklerini gösterir. Bu örnekler, iç içe fonksiyonlar, karmaşık kontrol yapıları ve diğer ileri düzey kod yapılarını içerir. Bu örnekler, programın güçlü yönlerini ve karmaşık kod yapılarını nasıl analiz edebildiğini gösterir:
+Karmaşık örnekler, programın daha gelişmiş özelliklerini gösterir. Bu örnekler iç içe fonksiyonlar, karmaşık kontrol yapıları ve diğer ileri düzey kod yapılarını içerir. Bu örnekler, programın güçlü yönlerini ve karmaşık kod yapılarını nasıl analiz edebildiğini gösterir:
 
 1. İç İçe Yapılar:
    - Sınıf tanımlamaları
