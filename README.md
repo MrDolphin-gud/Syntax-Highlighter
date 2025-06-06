@@ -102,11 +102,11 @@ string hesapla(int x, float y) {
 ```
 ## Proje Videosu
 
--https://youtu.be/sRRPJtxva7s?si=cSyMbg4ywYhfrutt
+- https://youtu.be/sRRPJtxva7s?si=cSyMbg4ywYhfrutt
 
 ## Proje Makalesi
 
--https://medium.com/@yunusayaz51p/sözdimi-renklendiricileri-neden-önemlidir-d02e293979b3
+- https://medium.com/@yunusayaz51p/sözdimi-renklendiricileri-neden-önemlidir-d02e293979b3
 
 ## Proje Yapısı
 
